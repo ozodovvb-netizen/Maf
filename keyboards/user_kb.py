@@ -2,20 +2,24 @@
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from config import BOT_USERNAME
+import config
 from locales.texts import t
 from database.models import ShopItem, Hero, ProtectionType, User
 
 
-def start_menu_kb(lang: str) -> InlineKeyboardMarkup:
+def start_menu_kb(lang: str, is_admin: bool = False) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     builder.button(
         text=t("btn_add_to_group", lang),
-        url=f"https://t.me/{BOT_USERNAME}?startgroup=true",
+        url=f"https://t.me/{config.BOT_USERNAME}?startgroup=true",
     )
     builder.button(text=t("btn_questions", lang), callback_data="open:questions")
     builder.button(text=t("btn_premium_groups", lang), callback_data="open:premium_groups")
-    builder.adjust(1, 2)
+    if is_admin:
+        builder.button(text="🛠 Boshqaruv paneli", callback_data="adm:main")
+        builder.adjust(1, 2, 1)
+    else:
+        builder.adjust(1, 2)
     return builder.as_markup()
 
 
